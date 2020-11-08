@@ -1,16 +1,19 @@
 package _01_Intro_To_Sockets.server;
 
 import java.net.*;
+
+import _01_Intro_To_Sockets.client.ClientGreeter;
+
 import java.io.*;
 
 public class ServerGreeter extends Thread {
 	//1. Create an object of the ServerSocket class
-	ServerSocket server;
+	ServerSocket serverSocket;
 
 	public ServerGreeter() throws IOException {
 		//2. Initialize the ServerSocket object. In the parameters,
 		//   you must define the port at which the server will listen for connections.
-		server = new ServerSocket(8080);	
+		serverSocket = new ServerSocket(8080);	
 		//*OPTIONAL* you can set a time limit for the server to wait by using the 
 		//  ServerSocket's setSoTimeout(int timeInMilliSeconds) method
 	}
@@ -23,12 +26,31 @@ public class ServerGreeter extends Thread {
 			while(var = true) {
 				System.out.println("waiting for a client to connect");
 				try {
-					Socket socket = server.accept();
-					server = new ServerSocket();
+					Socket socket = serverSocket.accept();
+					serverSocket = new ServerSocket();
 					
-				} catch (IOException e) {
 					
-					e.printStackTrace();
+					System.out.println("Client has connected");
+					
+					
+					
+					DataInputStream dataIn = new DataInputStream(socket.getInputStream());
+					System.out.println(dataIn.readUTF());
+					DataOutputStream dataOut = new DataOutputStream(socket.getOutputStream());
+					dataOut.writeUTF("Hello WOrld");
+					
+					socket.close();
+					
+					
+				} catch (SocketTimeoutException exception) {
+					System.out.println("Let the User know");
+					var = false;
+				
+				}
+				
+				catch (IOException e) {
+					var = false;
+					
 				}
 				
 				
@@ -66,6 +88,8 @@ public class ServerGreeter extends Thread {
 
 	public static void main(String[] args) {
 		//16. In a new thread, create an object of the ServerGreeter class and start the thread. Don't forget the try-catch.
+		Thread thread = new Thread();
+		thread.start();
 		
 	}
 }
