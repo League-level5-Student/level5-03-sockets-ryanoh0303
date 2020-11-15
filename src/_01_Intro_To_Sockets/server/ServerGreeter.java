@@ -23,11 +23,13 @@ public class ServerGreeter extends Thread {
 		boolean var = true;
 		
 		//4. Make a while loop that continues looping as long as the boolean created in the previous step is true.
-			while(var = true) {
+			while(var) {
 				System.out.println("waiting for a client to connect");
 				try {
+
 					Socket socket = serverSocket.accept();
-					serverSocket = new ServerSocket();
+					
+				//	serverSocket = new ServerSocket(8080);
 					
 					
 					System.out.println("Client has connected");
@@ -37,9 +39,9 @@ public class ServerGreeter extends Thread {
 					DataInputStream dataIn = new DataInputStream(socket.getInputStream());
 					System.out.println(dataIn.readUTF());
 					DataOutputStream dataOut = new DataOutputStream(socket.getOutputStream());
-					dataOut.writeUTF("Hello WOrld");
+					dataOut.writeUTF("server greet Hello WOrld");
 					
-					socket.close();
+					socket.close();	
 					
 					
 				} catch (SocketTimeoutException exception) {
@@ -88,8 +90,18 @@ public class ServerGreeter extends Thread {
 
 	public static void main(String[] args) {
 		//16. In a new thread, create an object of the ServerGreeter class and start the thread. Don't forget the try-catch.
-		Thread thread = new Thread();
-		thread.start();
+		try {
+			ServerGreeter  serverGreet = new ServerGreeter();
+			
+			serverGreet.run();
+			
+			Thread thread = new Thread (serverGreet);
+			
+			thread.start();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
 		
 	}
 }
