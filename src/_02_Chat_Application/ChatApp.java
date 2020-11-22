@@ -1,43 +1,46 @@
 package _02_Chat_Application;
 
-import javax.swing.JButton;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
-import _00_Click_Chat.gui.ButtonClicker;
-import _00_Click_Chat.networking.Client;
-import _00_Click_Chat.networking.Server;
 
 /*
  * Using the Click_Chat example, write an application that allows a server computer to chat with a client computer.
  */
 
-public class ChatApp extends JFrame{
+public class ChatApp extends JFrame implements ActionListener{
 		
-	JButton button = new JButton("CLICK");
+	JTextField jtext = new JTextField();
 	
-	Server server;
-	Client client;
+	ChatServer server;
+	ChatClient client;
 	
 	
 	public static void main(String[] args) {
-		new ButtonClicker();
+		new ChatApp();
 	}
 	
 	public ChatApp(){
 		
 		int response = JOptionPane.showConfirmDialog(null, "Would you like to host a connection?", "Buttons!", JOptionPane.YES_NO_OPTION);
 		if(response == JOptionPane.YES_OPTION){
-			server = new Server(8080);
+			server = new ChatServer(8080);
 			setTitle("SERVER");
 			JOptionPane.showMessageDialog(null, "Server started at: " + server.getIPAddress() + "\nPort: " + server.getPort());
-			button.addActionListener((e)->{
-				server.sendClick();
+			jtext.addActionListener((e)->{
+				String word = jtext.getText();
+				System.out.println(word);
+
 			});
-			add(button);
+			add(jtext);
 			setVisible(true);
 			setSize(400, 300);
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			server.start();
 			
 		}else{
@@ -45,16 +48,23 @@ public class ChatApp extends JFrame{
 			String ipStr = JOptionPane.showInputDialog("Enter the IP Address");
 			String prtStr = JOptionPane.showInputDialog("Enter the port number");
 			int port = Integer.parseInt(prtStr);
-			client = new Client(ipStr, port);
-			button.addActionListener((e)->{
-				client.sendClick();
+			client = new ChatClient(ipStr, port);
+			jtext.addActionListener((e)->{
+				String word = jtext.getText();
+				client.sendClick(word);
 			});
-			add(button);
+			add(jtext);
 			setVisible(true);
 			setSize(400, 300);
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			client.start();
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		
 	}
 
 }

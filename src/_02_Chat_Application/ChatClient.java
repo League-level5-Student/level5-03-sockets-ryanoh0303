@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 
 import javax.swing.JOptionPane;
 
-public class Client {
+public class ChatClient {
 	private String ip;
 	private int port;
 
@@ -19,7 +19,7 @@ public class Client {
 	ObjectOutputStream os;
 	ObjectInputStream is;
 
-	public Client(String ip, int port) {
+	public ChatClient(String ip, int port) {
 		this.ip = ip;
 		this.port = port;
 	}
@@ -42,7 +42,7 @@ public class Client {
 		
 		while (connection.isConnected()) {
 			try {
-				JOptionPane.showMessageDialog(null, is.readObject());
+				//JOptionPane.showMessageDialog(null, is.readObject());
 				System.out.println(is.readObject());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -51,14 +51,14 @@ public class Client {
 		}
 	}
 	
-	public void sendClick() {
+	public void sendClick(String word) {
 		try {
 			if (os != null) {
-				os.writeObject("CLICK SENT FROM CLIENT");
+				os.writeObject("Client wrote "+ word); //working
 				os.flush();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("SDF");
 		}
 	}
 }
